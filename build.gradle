@@ -1,0 +1,22 @@
+group 'io.byteshifter'
+version '0.1'
+description 'Gradle plugin for posting build metrics to Graphite'
+
+apply plugin: 'groovy'
+apply from: "${rootDir}/gradle/integTest.gradle"
+apply from: "${rootDir}/gradle/codenarc.gradle"
+apply from: "${rootDir}/gradle/jacoco.gradle"
+apply from: "${rootDir}/gradle/license.gradle"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile gradleApi()
+
+    testCompile ('org.spockframework:spock-core:1.0-groovy-2.4'){
+        exclude group: 'org.codehaus.groovy'
+    }
+    testCompile 'junit:junit:4.12'
+}

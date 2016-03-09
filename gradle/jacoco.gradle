@@ -1,0 +1,22 @@
+apply plugin: "jacoco"
+apply plugin: org.kt3k.gradle.plugin.CoverallsPlugin
+
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination "${buildDir}/reports/jacocoTestReport"
+    }
+}
+
+test.finalizedBy jacocoTestReport

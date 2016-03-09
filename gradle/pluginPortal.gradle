@@ -1,0 +1,24 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/"}
+    }
+    dependencies {
+        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.3'
+    }
+}
+
+apply plugin: "com.gradle.plugin-publish"
+
+pluginBundle {
+    website = 'https://github.com/byte-shifter-ltd/graphite-gradle-plugin'
+    vcsUrl = 'https://github.com/byte-shifter-ltd/graphite-gradle-plugin'
+    description = 'Gradle plugin for posting build metrics to Graphite'
+    tags = ['graphite', 'metrics', 'build']
+
+    plugins {
+        graphitePlugin {
+            id = 'io.byteshifter.graphite'
+            displayName = 'Gradle plugin for posting build metrics to Graphite'
+        }
+    }
+}
