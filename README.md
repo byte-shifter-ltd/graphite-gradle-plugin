@@ -6,3 +6,6 @@ This plugin takes metrics from the Gradle build tool and pushes them to a Graphi
 
 
 ## Build Status
+
+[![Build Status](https://travis-ci.org/byte-shifter-ltd/graphite-gradle-plugin.svg?branch=master)](https://travis-ci.org/byte-shifter-ltd/graphite-gradle-plugin)
+[![Coverage Status](https://coveralls.io/repos/github/byte-shifter-ltd/graphite-gradle-plugin/badge.svg?branch=master)](https://coveralls.io/github/byte-shifter-ltd/graphite-gradle-plugin?branch=master)
