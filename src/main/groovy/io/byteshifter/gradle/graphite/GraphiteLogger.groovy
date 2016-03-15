@@ -56,7 +56,7 @@ class GraphiteLogger {
     }
 
     void logToGraphiteWithIdentifier(String nodeIdentifier, Map stats) throws Exception {
-        Long curTimeInSec = System.currentTimeMillis() / 1000
+        BigDecimal curTimeInSec = getTimeInSeconds()
         StringBuffer lines = new StringBuffer()
         for (Map.Entry entry : stats.entrySet()) {
             String key = nodeIdentifier + "." + entry.getKey()
@@ -78,5 +78,29 @@ class GraphiteLogger {
         } finally {
             socket.close()
         }
+    }
+
+    /**
+     * formatMetrics
+     * @param identifier is a unique string to help name the source of metrics in Graphite
+     * @param metrics is a key value pair of metrics to be sent
+     * @return String is a correctly formatted output which can be sent to Graphite
+     */
+    static String formatMetrics(String identifier, LinkedHashMap<String, Long> metrics) {
+        def curTimeInSec = getTimeInSeconds()
+        String output = ''
+
+        metrics.each { key, value ->
+            output += "${identifier}.${key} ${value} ${curTimeInSec}\n"
+        }
+        return output
+    }
+
+    /**
+     * getTimeInSeconds
+     * @return time in Seconds
+     */
+    private static BigDecimal getTimeInSeconds() {
+        System.currentTimeMillis() / 1000
     }
 }

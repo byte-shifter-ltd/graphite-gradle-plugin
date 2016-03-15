@@ -24,13 +24,18 @@
 package io.byteshifter.gradle.graphite
 
 import spock.lang.Specification
+import spock.lang.Subject
 
 /**
  * @author Sion Williams
  */
 class GraphiteLoggerSpec extends Specification {
-    void setup() {
 
+    @Subject
+    GraphiteLogger gL
+
+    void setup() {
+        gL = new GraphiteLogger()
     }
 
     void cleanup() {
@@ -38,6 +43,34 @@ class GraphiteLoggerSpec extends Specification {
     }
 
     def "Socket message is correctly formatted"() {
+        given:
+        def identifier = "myIdentifier"
+        def metrics = [buildTime: 900L]
+        //Mock currentTimeMillis using Groovy metaprogramming
+        System.metaClass.static.currentTimeMillis = {return 1000L}
 
+        when:
+        def result = gL.formatMetrics(identifier, metrics)
+
+        then:
+        // result == "myIdentifier.buildTime 900 1000/1000\n"
+        result == "myIdentifier.buildTime 900 1\n"
+    }
+
+    def "Complex message is correctly formatted"() {
+        given:
+        def identifier = "myIdentifier"
+        def metrics = [buildTime: 900L,
+                        anotherMetric: 192L,
+                        andAnother: 3563L]
+        //Mock currentTimeMillis using Groovy metaprogramming
+        System.metaClass.static.currentTimeMillis = {return 1000L}
+
+        when:
+        def result = gL.formatMetrics(identifier, metrics)
+
+        then:
+        // result == "myIdentifier.buildTime 900 1000/1000\n"
+        result == "myIdentifier.buildTime 900 1\nmyIdentifier.anotherMetric 192 1\nmyIdentifier.andAnother 3563 1\n"
     }
 }
