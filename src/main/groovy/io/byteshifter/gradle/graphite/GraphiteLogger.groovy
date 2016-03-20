@@ -103,4 +103,29 @@ class GraphiteLogger {
     private static BigDecimal getTimeInSeconds() {
         System.currentTimeMillis() / 1000
     }
+
+    /**
+     * log
+     * Send an entry to Graphite
+     * @param payload is a formatted string of metrics
+     * @throws UnknownHostException
+     * @throws IOException
+     * @return Success or Fail as Boolean
+     */
+    Boolean log(String payload) throws UnknownHostException, IOException {
+        log.info("Writing [${payload}] to graphite")
+        Socket sock = new Socket(graphiteHost, graphitePort)
+        try {
+            sock << payload
+        } catch(UnknownHostException e) {
+            log.error("Incorrect host details", e)
+            return false
+        } catch(IOException e) {
+            log.error("Something threw an IOException", e)
+            return false
+        } finally {
+            sock.close()
+        }
+        return true
+    }
 }

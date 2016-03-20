@@ -52,4 +52,19 @@ class GraphiteLoggerIntegSpec extends Specification {
         expect:
         graphiteLogger.logToGraphiteWithIdentifier(nodeIdentifier, stats)
     }
+
+    def "can log data to graphite"() {
+        given:
+        GraphiteLogger graphiteLogger = new GraphiteLogger()
+        graphiteLogger.with {
+            graphiteHost = '192.168.99.100'
+            graphitePort = 2003
+        }
+        String identifier = "GL.integtest"
+        def metrics = [buildTime: 1000L]
+        def payload = graphiteLogger.formatMetrics(identifier, metrics)
+
+        expect:
+        graphiteLogger.log(payload)
+    }
 }

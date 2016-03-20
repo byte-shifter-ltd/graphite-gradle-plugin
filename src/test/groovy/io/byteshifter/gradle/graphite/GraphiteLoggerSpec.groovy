@@ -23,8 +23,10 @@
  */
 package io.byteshifter.gradle.graphite
 
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Subject
+import spock.util.mop.ConfineMetaClassChanges
 
 /**
  * @author Sion Williams
@@ -34,14 +36,21 @@ class GraphiteLoggerSpec extends Specification {
     @Subject
     GraphiteLogger gL
 
+    Socket mockSocket = Mock()
+
     void setup() {
-        gL = new GraphiteLogger()
+        gL = new GraphiteLogger(mockSocket)
+        gL.with {
+            graphiteHost = '192.168.99.100'
+            graphitePort = 1010
+        }
     }
 
     void cleanup() {
-
+        mockSocket.close()
     }
 
+    @ConfineMetaClassChanges([System])
     def "Socket message is correctly formatted"() {
         given:
         def identifier = "myIdentifier"
@@ -57,6 +66,7 @@ class GraphiteLoggerSpec extends Specification {
         result == "myIdentifier.buildTime 900 1\n"
     }
 
+    @ConfineMetaClassChanges([System])
     def "Complex message is correctly formatted"() {
         given:
         def identifier = "myIdentifier"
@@ -72,5 +82,17 @@ class GraphiteLoggerSpec extends Specification {
         then:
         // result == "myIdentifier.buildTime 900 1000/1000\n"
         result == "myIdentifier.buildTime 900 1\nmyIdentifier.anotherMetric 192 1\nmyIdentifier.andAnother 3563 1\n"
+    }
+
+    @Ignore("Currently not able to mock the socket")
+    def "GraphiteLogger correctly logs to Graphite"(){
+        given:
+        def payload = "mock payload"
+
+        when:
+        gL.log(payload)
+
+        then:
+        payload == mockSocket.outputStream.toString()
     }
 }

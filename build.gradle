@@ -19,4 +19,5 @@ dependencies {
         exclude group: 'org.codehaus.groovy'
     }
     testCompile 'junit:junit:4.12'
+    testCompile 'cglib:cglib-nodep:3.2.1'
 }
