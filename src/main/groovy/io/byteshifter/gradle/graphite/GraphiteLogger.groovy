@@ -36,50 +36,6 @@ class GraphiteLogger {
     String graphiteHost
     int graphitePort
 
-    void logToGraphite(String key, long value) {
-        Map stats = new HashMap()
-        stats.put(key, value)
-        logToGraphiteWithMap(stats)
-    }
-
-    void logToGraphiteWithMap(Map stats) {
-        if (stats.isEmpty()) {
-            return
-        }
-
-        try {
-            String nodeIdentifier = InetAddress.getLocalHost().getHostName()
-            logToGraphiteWithIdentifier(nodeIdentifier, stats)
-        } catch (Throwable t) {
-            log.error("Can't log to graphite", t)
-        }
-    }
-
-    void logToGraphiteWithIdentifier(String nodeIdentifier, Map stats) throws Exception {
-        BigDecimal curTimeInSec = getTimeInSeconds()
-        StringBuffer lines = new StringBuffer()
-        for (Map.Entry entry : stats.entrySet()) {
-            String key = nodeIdentifier + "." + entry.getKey()
-            lines.append(key).append(" ").append(entry.getValue()).append(" ").append(curTimeInSec).append("\n")
-            //even the last line in graphite
-        }
-        logToGraphiteWithLines(lines)
-    }
-
-    private void logToGraphiteWithLines(StringBuffer lines) throws Exception {
-        String msg = lines.toString()
-        log.info("Writing [${msg}] to graphite")
-        Socket socket = new Socket(graphiteHost, graphitePort)
-        try {
-            Writer writer = new OutputStreamWriter(socket.getOutputStream())
-            writer.write(msg)
-            writer.flush()
-            writer.close()
-        } finally {
-            socket.close()
-        }
-    }
-
     /**
      * formatMetrics
      * @param identifier is a unique string to help name the source of metrics in Graphite

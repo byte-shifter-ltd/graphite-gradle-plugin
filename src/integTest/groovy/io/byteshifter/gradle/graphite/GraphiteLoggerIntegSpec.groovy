@@ -29,29 +29,6 @@ import spock.lang.Specification
  * @author Sion Williams
  */
 class GraphiteLoggerIntegSpec extends Specification {
-    void setup() {
-
-    }
-
-    void cleanup() {
-
-    }
-
-    def "can send data to graphite"() {
-        given:
-        String host = '192.168.99.100'
-        int port = 2003
-        String nodeIdentifier ="tomcat.UI.planck_8080"
-        Map stats = new HashMap()
-        stats.put("memcache_calls", 900L)
-        stats.put("num_threads", 50L)
-        GraphiteLogger graphiteLogger = new GraphiteLogger()
-        graphiteLogger.setGraphiteHost(host)
-        graphiteLogger.setGraphitePort(port)
-
-        expect:
-        graphiteLogger.logToGraphiteWithIdentifier(nodeIdentifier, stats)
-    }
 
     def "can log data to graphite"() {
         given:
