@@ -36,18 +36,11 @@ class GraphiteLoggerSpec extends Specification {
     @Subject
     GraphiteLogger gL
 
-    Socket mockSocket = Mock()
-
     void setup() {
-        gL = new GraphiteLogger(mockSocket)
-        gL.with {
-            graphiteHost = '192.168.99.100'
-            graphitePort = 1010
-        }
+        gL = new GraphiteLogger()
     }
 
     void cleanup() {
-        mockSocket.close()
     }
 
     @ConfineMetaClassChanges([System])
